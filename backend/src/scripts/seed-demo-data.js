@@ -55,7 +55,7 @@ async function createIfAbsent(Model, filter, document) {
 async function seedDemoData() {
   await mongoose.connect(env.mongoUri);
   await seedService.ensureDefaultAdmin();
-  await seedService.seedDevelopmentReferenceData();
+  await seedService.ensureDemoOperationalUsers();
   await seedService.ensureNotificationTemplates();
 
   const admin = await User.findOne({ email: env.defaultAdminEmail.toLowerCase() });
