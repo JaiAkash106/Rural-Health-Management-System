@@ -258,7 +258,7 @@ try {
   logger.info(result, "Synthetic RHMS demo data is ready");
   process.exitCode = 0;
 } catch (error) {
-  logger.error({ error }, "Failed to seed synthetic RHMS demo data");
+  logger.error({ err: error, errorMessage: error.message, stack: error.stack }, "Failed to seed synthetic RHMS demo data");
   process.exitCode = 1;
 } finally {
   await mongoose.disconnect();
