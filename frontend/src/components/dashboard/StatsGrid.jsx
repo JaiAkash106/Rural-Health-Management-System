@@ -1,6 +1,8 @@
 import { motion } from "framer-motion";
 import { FiActivity, FiCalendar, FiShield, FiUsers } from "react-icons/fi";
-import { metrics as fallbackMetrics } from "../../data/mockDashboard";
+import { Skeleton } from "../ui/Skeleton";
+import { EmptyState } from "../ui/EmptyState";
+import { Button } from "../ui/Button";
 import { StatCard } from "../ui/StatCard";
 import { staggerParent } from "../../motion/transitions";
 
@@ -15,7 +17,23 @@ const iconMap = {
   "Low Stock Alerts": FiShield,
 };
 
-export function StatsGrid({ metrics = fallbackMetrics }) {
+export function StatsGrid({ metrics = [], isLoading = false, error = "", onRetry }) {
+  if (isLoading) {
+    return (
+      <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4" aria-label="Loading dashboard metrics">
+        {[0, 1, 2, 3].map((item) => <Skeleton className="h-40" key={item} />)}
+      </section>
+    );
+  }
+
+  if (error) {
+    return <EmptyState action={<Button onClick={onRetry} type="button">Retry dashboard</Button>} description={error} title="Dashboard data could not be loaded" />;
+  }
+
+  if (!metrics.length) {
+    return <EmptyState description="No dashboard metrics are available for the selected day." title="No live dashboard data" />;
+  }
+
   return (
     <motion.section
       animate="visible"

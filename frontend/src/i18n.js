@@ -137,7 +137,7 @@ const resources = {
         offlineResilience: "Offline resilience",
         offlineResilienceCopy: "Built to keep rural workflows moving even during unstable connectivity.",
         title: "RHMS Sign In",
-        description: "Sign in with the seeded admin account or your provisioned staff credentials to open the rural health mission control workspace.",
+        description: "Sign in with credentials provisioned for your RHMS environment to open the rural health mission control workspace.",
         email: "Email",
         password: "Password",
         showPassword: "Show password",
@@ -146,7 +146,7 @@ const resources = {
         signingIn: "Signing in...",
         emailPlaceholder: "name@rphc.gov",
         passwordPlaceholder: "Enter your password",
-        demoNote: "Default admin is preseeded for the academic demo environment.",
+        demoNote: "Use the account credentials provided by your RHMS administrator.",
         signInFailed: "Unable to sign in",
       },
       intro: {
@@ -191,7 +191,7 @@ const resources = {
       },
       footer: {
         line1: "RHMS command center for rural primary healthcare operations.",
-        line2: "Academic demonstration project. This application is not an official Government of Tamil Nadu service.",
+        line2: "This application is not an official Government of Tamil Nadu service.",
       },
     },
   },
@@ -338,7 +338,7 @@ const resources = {
         signingIn: "உள்நுழைகிறது...",
         emailPlaceholder: "name@rphc.gov",
         passwordPlaceholder: "உங்கள் கடவுச்சொல்லை உள்ளிடவும்",
-        demoNote: "அகாதமிக் காட்சி சூழலுக்காக முன்னிருப்பு நிர்வாகி ஏற்கனவே உள்ளது.",
+        demoNote: "உங்கள் RHMS நிர்வாகி வழங்கிய கணக்கு விவரங்களைப் பயன்படுத்தவும்.",
         signInFailed: "உள்நுழைய முடியவில்லை",
       },
       intro: {

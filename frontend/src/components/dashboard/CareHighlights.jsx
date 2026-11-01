@@ -1,44 +1,52 @@
 import { FiActivity, FiAlertCircle, FiClock, FiShield } from "react-icons/fi";
 import { Card, CardContent, CardHeader } from "../ui/Card";
 import { Badge } from "../ui/Badge";
+import { Skeleton } from "../ui/Skeleton";
 
-const highlights = [
-  {
-    icon: FiAlertCircle,
-    title: "High-risk cohort",
-    detail: "12 antenatal and diabetic patients require same-day review.",
-    tone: "warning",
-  },
-  {
-    icon: FiClock,
-    title: "Follow-up adherence",
-    detail: "84% of scheduled follow-ups completed in the past 30 days.",
-    tone: "info",
-  },
-  {
-    icon: FiShield,
-    title: "Clinical readiness",
-    detail: "All triage counters active, emergency desk staffed, no queue escalation.",
-    tone: "success",
-  },
-  {
-    icon: FiActivity,
-    title: "Village surveillance",
-    detail: "Melaur shows a mild spike in seasonal respiratory complaints this week.",
-    tone: "brand",
-  },
-];
+function buildHighlights(operations) {
+  return [
+    {
+      icon: FiAlertCircle,
+      title: "Critical laboratory results",
+      detail: `${operations.criticalLabResults} critical results recorded today.`,
+      tone: operations.criticalLabResults > 0 ? "warning" : "neutral",
+    },
+    {
+      icon: FiClock,
+      title: "Pending prescriptions",
+      detail: `${operations.pendingPrescriptions} prescription records await pharmacy processing.`,
+      tone: operations.pendingPrescriptions > 0 ? "info" : "neutral",
+    },
+    {
+      icon: FiShield,
+      title: "Stock alerts",
+      detail: `${operations.lowMedicineBatches + operations.lowVaccineBatches} low-stock medicine or vaccine batches recorded.`,
+      tone: operations.lowMedicineBatches + operations.lowVaccineBatches > 0 ? "warning" : "success",
+    },
+    {
+      icon: FiActivity,
+      title: "Vaccinations today",
+      detail: `${operations.todaysVaccinations} vaccination records administered today.`,
+      tone: "brand",
+    },
+  ];
+}
 
-export function CareHighlights() {
+export function CareHighlights({ operations, isLoading = false, error = "" }) {
+  const highlights = operations ? buildHighlights(operations) : [];
+
   return (
     <Card>
       <CardHeader
-        description="A design-system backed module for risk, operational, and public-health summaries."
+        description="Live operational counts derived from saved records."
         eyebrow="Clinical Signals"
         title="What needs attention right now"
       />
       <CardContent className="grid gap-4 md:grid-cols-2">
-        {highlights.map((item) => {
+        {isLoading ? <Skeleton className="col-span-full h-48" /> : null}
+        {!isLoading && error ? <p className="col-span-full text-sm text-[var(--color-danger)]">{error}</p> : null}
+        {!isLoading && !error && !highlights.length ? <p className="col-span-full text-sm text-[var(--color-foreground-muted)]">No live clinical summary is available.</p> : null}
+        {!isLoading && !error && highlights.map((item) => {
           const Icon = item.icon;
 
           return (

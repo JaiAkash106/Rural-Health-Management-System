@@ -5,14 +5,10 @@ import { env } from "./config/env.js";
 import { logger } from "./config/logger.js";
 import { initializeSocket } from "./socket/socket-server.js";
 import { notificationSchedulerService } from "./services/notification-scheduler.service.js";
-import { seedService } from "./services/seed.service.js";
 
 async function bootstrap() {
   try {
     await mongoose.connect(env.mongoUri);
-    await seedService.ensureDefaultAdmin();
-    await seedService.ensureDemoOperationalUsers();
-    await seedService.ensureNotificationTemplates();
     const server = http.createServer(app);
     initializeSocket(server, env.corsOrigin);
     notificationSchedulerService.start();

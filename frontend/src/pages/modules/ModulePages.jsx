@@ -4,23 +4,11 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { api } from "../../services/api";
 import { Button } from "../../components/ui/Button";
 import { Card, CardContent, CardHeader } from "../../components/ui/Card";
-import { DataTable } from "../../components/ui/DataTable";
 import { EmptyState } from "../../components/ui/EmptyState";
 import { FilterBar } from "../../components/ui/FilterBar";
 import { Input } from "../../components/ui/Input";
 import { PageHeader } from "../../components/ui/PageHeader";
 import { SearchBar } from "../../components/ui/SearchBar";
-import { StatCard } from "../../components/ui/StatCard";
-import { Badge } from "../../components/ui/Badge";
-import {
-  appointmentSummary,
-  labCards,
-  medicineInventory,
-  queueColumns,
-  reportCategories,
-  settingsSections,
-  faqItems,
-} from "../../data/mockAppData";
 import { useConnectivity } from "../../context/ConnectivityContext";
 import { offlineDb } from "../../services/offline-db";
 import { getBreadcrumbs } from "../../utils/breadcrumbs";
@@ -275,26 +263,6 @@ export function VisitHistoryPage() {
   );
 }
 
-export function AppointmentsPage() {
-  return (
-    <PageScaffold
-      actionLabel="Book appointment"
-      description="Unified appointment list, calendar shortcuts, and operational scheduling summary."
-      eyebrow="Appointments"
-      filters={["Upcoming", "Completed", "Cancelled"]}
-      searchPlaceholder="Search by patient, doctor, or slot..."
-      title="Appointments"
-    >
-      <section className="grid gap-4 md:grid-cols-3">
-        {appointmentSummary.map((item) => (
-          <StatCard accent={item.accent} detail={item.detail} key={item.label} label={item.label} value={item.value} />
-        ))}
-      </section>
-      <EmptyState description="List and booking workflows remain scheduled for a later phase." title="Appointment workbench prepared" />
-    </PageScaffold>
-  );
-}
-
 export function CalendarPage() {
   return (
     <PageScaffold actionLabel="New slot" description="Calendar-first operational view for patient booking and clinician block management." eyebrow="Calendar" filters={["Day", "Week", "Month"]} searchPlaceholder="Search for calendar events..." title="Appointment calendar">
@@ -304,157 +272,6 @@ export function CalendarPage() {
           <EmptyState description="This visual placeholder stands in for the premium calendar surface that will be connected next." title="Calendar layout staged" />
         </CardContent>
       </Card>
-    </PageScaffold>
-  );
-}
-
-export function QueuePage() {
-  return (
-    <PageScaffold actionLabel="Generate token" description="Token queue operations with separate states for waiting, current, completed, and emergency cases." eyebrow="Queue" filters={["Current", "Emergency", "Completed"]} searchPlaceholder="Search token, patient, or service desk..." title="Token queue">
-      <DataTable
-        columns={[
-          { key: "token", label: "Token" },
-          { key: "patient", label: "Patient" },
-          { key: "desk", label: "Desk" },
-          { key: "status", label: "Status", render: (value) => <Badge tone={value === "Emergency" ? "danger" : value === "Current" ? "info" : "neutral"}>{value}</Badge> },
-          { key: "priority", label: "Priority" },
-        ]}
-        rows={queueColumns}
-      />
-    </PageScaffold>
-  );
-}
-
-export function WaitingQueuePage() {
-  return (
-    <PageScaffold description="Dedicated waiting-room surface for triage and front-desk monitoring." eyebrow="Waiting Queue" filters={["Normal", "Priority", "Emergency"]} searchPlaceholder="Search waiting patients..." title="Waiting queue">
-      <EmptyState description="Waiting-room state transitions and live updates will be connected with real-time APIs in a later phase." title="Waiting room surface prepared" />
-    </PageScaffold>
-  );
-}
-
-export function DoctorsPage() {
-  return (
-    <PageScaffold description="Doctor workspace landing page for consultation load, patient search, and certificates." eyebrow="Doctors" filters={["Available", "Consulting", "Follow-ups"]} searchPlaceholder="Search doctors or assigned queues..." title="Doctor dashboard">
-      <EmptyState description="This page is ready to receive doctor-specific widgets, consultation lists, and note flows." title="Doctor workspace prepared" />
-    </PageScaffold>
-  );
-}
-
-export function PharmacyPage() {
-  return (
-    <PageScaffold description="Inventory, low-stock alerts, expiry risk, and medicine issuing UX for pharmacy operations." eyebrow="Pharmacy" filters={["Low Stock", "Expiring", "Suppliers"]} searchPlaceholder="Search medicine, batch, or supplier..." title="Pharmacy inventory">
-      <section className="grid gap-4 md:grid-cols-3">
-        {medicineInventory.map((item) => (
-          <Card key={item.name} hover>
-            <CardHeader eyebrow={item.state} title={item.name} />
-            <CardContent>
-              <p className="text-sm text-[var(--color-foreground-muted)]">Stock: {item.stock}</p>
-              <p className="mt-2 text-sm text-[var(--color-foreground-muted)]">Expiry: {item.expiry}</p>
-            </CardContent>
-          </Card>
-        ))}
-      </section>
-    </PageScaffold>
-  );
-}
-
-export function LaboratoryPage() {
-  return (
-    <PageScaffold actionLabel="Upload report" description="Drag-and-drop upload surface, pending lab workflow, and completed diagnostics presentation." eyebrow="Laboratory" filters={["Pending", "Completed", "Urgent"]} searchPlaceholder="Search report, patient, or test type..." title="Laboratory">
-      <section className="grid gap-4 md:grid-cols-3">
-        {labCards.map((item) => (
-          <StatCard accent="linear-gradient(135deg,#0c879d,#84dbe4)" detail={item.detail} key={item.label} label={item.label} value={item.value} />
-        ))}
-      </section>
-      <EmptyState description="The upload workflow UI and report preview shells are ready to be integrated with storage later." title="Lab operations page prepared" />
-    </PageScaffold>
-  );
-}
-
-export function VaccinationPage() {
-  return (
-    <PageScaffold description="Schedule, due dates, maternal-child reminders, and vaccination coverage workspace." eyebrow="Vaccination" filters={["Children", "Adults", "Pregnancy"]} searchPlaceholder="Search patient, vaccine, or due date..." title="Vaccination">
-      <EmptyState description="Vaccination history, reminders, and government schedule panels will be added onto this shell." title="Vaccination program view prepared" />
-    </PageScaffold>
-  );
-}
-
-export function ReportsPage() {
-  return (
-    <PageScaffold actionLabel="Generate report" description="Export-oriented page for patient, doctor, medicine, village, and appointment reporting." eyebrow="Reports" filters={["PDF", "Excel", "Printable"]} searchPlaceholder="Search report template or category..." title="Reports">
-      <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-        {reportCategories.map((item) => (
-          <Card key={item} hover>
-            <CardHeader eyebrow="Export Ready" title={item} />
-            <CardContent>
-              <p className="text-sm text-[var(--color-foreground-muted)]">Professional export entry point for {item.toLowerCase()}.</p>
-            </CardContent>
-          </Card>
-        ))}
-      </section>
-    </PageScaffold>
-  );
-}
-
-export function AnalyticsPage() {
-  return (
-    <PageScaffold description="Mock analytics shell for growth, demographics, disease trends, and village-level public health insight." eyebrow="Analytics" filters={["Patients", "Diseases", "Villages"]} searchPlaceholder="Search dashboard metric or cohort..." title="Analytics">
-      <section className="grid gap-4 xl:grid-cols-3">
-        <Card><CardHeader eyebrow="Growth" title="Patient trend visualization" /><CardContent><EmptyState description="Chart component slot with realistic data visualization to be expanded later." title="Trend chart staged" /></CardContent></Card>
-        <Card><CardHeader eyebrow="Demographics" title="Gender and age split" /><CardContent><EmptyState description="Pie and distribution chart areas are visually reserved here." title="Demographic charts staged" /></CardContent></Card>
-        <Card><CardHeader eyebrow="Village Health" title="Coverage and disease heat map" /><CardContent><EmptyState description="Heat map and community metrics panels will attach to analytics services later." title="Village analytics staged" /></CardContent></Card>
-      </section>
-    </PageScaffold>
-  );
-}
-
-export function NotificationsPage() {
-  return (
-    <PageScaffold description="Central inbox for SMS, email, push reminders, and operational escalation alerts." eyebrow="Notifications" filters={["Unread", "Reminders", "System"]} searchPlaceholder="Search alerts or recipients..." title="Notification center">
-      <EmptyState description="Notification orchestration will be connected after backend messaging integrations are introduced." title="Notification workspace prepared" />
-    </PageScaffold>
-  );
-}
-
-export function SettingsPage() {
-  return (
-    <PageScaffold description="Modern settings layout for account, hospital information, theme, security, and backup preferences." eyebrow="Settings" filters={["Profile", "Theme", "Security"]} searchPlaceholder="Search setting or policy..." title="Settings">
-      <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-        {settingsSections.map((item) => (
-          <Card key={item} hover>
-            <CardHeader eyebrow="Settings Section" title={item} />
-            <CardContent>
-              <p className="text-sm text-[var(--color-foreground-muted)]">{item} controls and configuration surface.</p>
-            </CardContent>
-          </Card>
-        ))}
-      </section>
-    </PageScaffold>
-  );
-}
-
-export function HelpPage() {
-  return (
-    <PageScaffold description="Support and onboarding area for FAQ, documentation, contact paths, and product versioning." eyebrow="Help Center" filters={["FAQ", "Contact", "Support"]} searchPlaceholder="Search help topics..." title="Help center">
-      <section className="grid gap-4 xl:grid-cols-3">
-        {faqItems.map((item) => (
-          <Card key={item.q}>
-            <CardHeader eyebrow="FAQ" title={item.q} />
-            <CardContent>
-              <p className="text-sm text-[var(--color-foreground-muted)]">{item.a}</p>
-            </CardContent>
-          </Card>
-        ))}
-      </section>
-      <div className="flex gap-3">
-        <Link to="/settings">
-          <Button size="lg" type="button" variant="secondary">Open settings</Button>
-        </Link>
-        <Link to="/notifications">
-          <Button size="lg" type="button">Open alerts</Button>
-        </Link>
-      </div>
     </PageScaffold>
   );
 }

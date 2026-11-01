@@ -17,7 +17,17 @@ import { NotificationsSummary } from "../dashboard/NotificationsSummary";
 
 export function DashboardPage() {
   const { t, i18n } = useTranslation();
-  const [summary, setSummary] = useState({ metrics: [], recentActivities: [] });
+  const [summary, setSummary] = useState({
+    metrics: [],
+    recentActivities: [],
+    queueEntries: [],
+    queuePerformance: [],
+    doctorAvailability: [],
+    recentNotifications: [],
+    operations: null,
+  });
+  const [summaryState, setSummaryState] = useState("loading");
+  const [summaryError, setSummaryError] = useState("");
   const locale = i18n.language === "ta" ? "ta-IN" : "en-IN";
 
   const formattedDate = useMemo(
@@ -30,18 +40,28 @@ export function DashboardPage() {
     [locale],
   );
 
-  useEffect(() => {
-    async function loadSummary() {
-      try {
-        const response = await api.get("/dashboard/summary");
-        setSummary(response.data.data);
-      } catch {
-        setSummary({ metrics: [], recentActivities: [] });
-      }
-    }
+  async function loadSummary() {
+    setSummaryState("loading");
+    setSummaryError("");
 
+    try {
+      const response = await api.get("/dashboard/summary");
+      setSummary(response.data.data);
+      setSummaryState("success");
+    } catch (error) {
+      setSummaryState("error");
+      setSummaryError(error.response?.data?.message || "The dashboard could not retrieve live data. Check your connection and try again.");
+    }
+  }
+
+  useEffect(() => {
     loadSummary();
   }, []);
+
+  const isLoading = summaryState === "loading";
+  const hasError = summaryState === "error";
+  const currentConsultations = summary.operations?.currentConsultations;
+  const completedConsultations = summary.operations?.completedConsultations;
 
   return (
     <div className="space-y-6">
@@ -85,21 +105,21 @@ export function DashboardPage() {
             <CardContent className="mt-0 grid gap-4">
               <div className="flex items-center justify-between rounded-[1.4rem] bg-white/10 p-4">
                 <div>
-                  <p className="text-xs font-semibold uppercase tracking-[0.12em] text-white/84">{t("dashboard.carePulse")}</p>
-                  <p className="ui-stat mt-2 text-3xl font-semibold text-white [text-shadow:0_0_12px_rgba(96,165,250,0.15)]">96%</p>
+                  <p className="text-xs font-semibold uppercase tracking-[0.12em] text-white/84">Current consultations</p>
+                  <p className="ui-stat mt-2 text-3xl font-semibold text-white [text-shadow:0_0_12px_rgba(96,165,250,0.15)]">{isLoading ? "…" : hasError ? "—" : currentConsultations}</p>
                 </div>
                 <FiActivity size={24} />
               </div>
               <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-1">
                 <div className="rounded-[1.4rem] bg-white/10 p-4">
-                  <p className="text-xs font-semibold uppercase tracking-[0.12em] text-white/84">{t("dashboard.queueReadiness")}</p>
-                  <p className="mt-2 text-lg font-semibold text-white">{t("dashboard.emergencyPathways")}</p>
+                  <p className="text-xs font-semibold uppercase tracking-[0.12em] text-white/84">Completed consultations</p>
+                  <p className="mt-2 text-lg font-semibold text-white">{isLoading ? "Loading live data" : hasError ? "Not available" : `${completedConsultations} completed today`}</p>
                 </div>
                 <div className="rounded-[1.4rem] bg-white/10 p-4">
-                  <p className="text-xs font-semibold uppercase tracking-[0.12em] text-white/84">{t("dashboard.currentShift")}</p>
+                  <p className="text-xs font-semibold uppercase tracking-[0.12em] text-white/84">Dashboard source</p>
                   <p className="mt-2 flex items-center gap-2 text-lg font-semibold text-white">
                     <FiClock size={18} />
-                    {t("dashboard.frontDeskToConsultation")}
+                    {isLoading ? "Loading" : hasError ? "Connection required" : "Saved RHMS records"}
                   </p>
                 </div>
               </div>
@@ -110,19 +130,19 @@ export function DashboardPage() {
 
       <SectionHeader description={t("dashboard.sectionDescription")} eyebrow={t("dashboard.liveOperations")} title={t("dashboard.sectionTitle")} />
 
-      <StatsGrid metrics={summary.metrics} />
+      <StatsGrid error={summaryError} isLoading={isLoading} metrics={summary.metrics} onRetry={loadSummary} />
 
       <section className="grid gap-6 xl:grid-cols-[1.3fr_0.9fr]">
-        <QueuePanel />
-        <ActivityTimeline activities={summary.recentActivities} />
+        <QueuePanel error={summaryError} isLoading={isLoading} items={summary.queueEntries} performance={summary.queuePerformance} />
+        <ActivityTimeline activities={summary.recentActivities} error={summaryError} isLoading={isLoading} />
       </section>
 
       <section className="grid gap-6 xl:grid-cols-[1.1fr_0.9fr]">
-        <DoctorAvailabilityPanel doctors={summary.doctorAvailability} />
-        <NotificationsSummary items={summary.recentNotifications} />
+        <DoctorAvailabilityPanel doctors={summary.doctorAvailability} error={summaryError} isLoading={isLoading} />
+        <NotificationsSummary error={summaryError} isLoading={isLoading} items={summary.recentNotifications} />
       </section>
 
-      <CareHighlights />
+      <CareHighlights error={summaryError} isLoading={isLoading} operations={summary.operations} />
       <QuickActions />
     </div>
   );

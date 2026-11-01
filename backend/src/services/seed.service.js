@@ -30,7 +30,7 @@ export const seedService = {
     });
   },
 
-  async ensureDemoOperationalUsers() {
+  async seedDevelopmentReferenceData() {
     const entries = [
       {
         fullName: "Dr. Priya N",

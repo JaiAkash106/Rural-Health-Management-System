@@ -27,7 +27,7 @@ const highlights = [
 const stats = [
   { label: "Core Modules", value: "12+", detail: "Patients, queue, lab, pharmacy, vaccination, analytics, AI, outreach", accent: "linear-gradient(135deg,#2E7D32,#6bd388)" },
   { label: "Languages", value: "2", detail: "English and Tamil interfaces", accent: "linear-gradient(135deg,#00879a,#6bd8e2)" },
-  { label: "Demo Flows", value: "9", detail: "Prepared for final project evaluation", accent: "linear-gradient(135deg,#d89812,#f7d27d)" },
+  { label: "Workflow Shortcuts", value: "9", detail: "Guided operational navigation", accent: "linear-gradient(135deg,#d89812,#f7d27d)" },
   { label: "Deployment Ready", value: "PWA", detail: "Browser installable with offline support", accent: "linear-gradient(135deg,#8f4bd6,#c69cff)" },
 ];
 
@@ -36,7 +36,7 @@ export function PresentationDashboardPage() {
     <div className="space-y-6">
       <PageHeader
         breadcrumbs={getBreadcrumbs("/presentation")}
-        description="Presentation-first summary for faculty review, portfolio walk-through, and live demonstration."
+        description="Presentation-first summary for faculty review and portfolio walk-through."
         eyebrow="Showcase"
         title="RHMS Presentation Dashboard"
       />
@@ -85,7 +85,7 @@ export function PresentationDashboardPage() {
 
       <section className="grid gap-6 xl:grid-cols-2">
         <Card>
-          <CardHeader eyebrow="Live Shortcuts" title="Demo sequence shortcuts" />
+          <CardHeader eyebrow="Live Shortcuts" title="Workflow shortcuts" />
           <CardContent className="grid gap-3 md:grid-cols-2">
             <Link to="/patients/register"><Button className="w-full justify-start" size="md" type="button" variant="secondary">1. Patient registration</Button></Link>
             <Link to="/appointments"><Button className="w-full justify-start" size="md" type="button" variant="secondary">2. Appointment booking</Button></Link>
@@ -106,7 +106,7 @@ export function PresentationDashboardPage() {
             <p>Built on a layered MERN architecture with role-aware workflows for reception, doctor, pharmacy, lab, vaccination, health worker, and administrators.</p>
             <p>Designed for rural healthcare constraints with offline-first behavior, multilingual interface support, resilient queue management, and printable artifacts.</p>
             <p>Extended into a platform direction with multi-PHC readiness, consent-controlled referrals, FHIR-style exports, AI governance, outreach operations, and device management foundations.</p>
-            <p>Prepared for academic evaluation with demo mode, report-ready documentation, viva preparation, and release packaging.</p>
+            <p>Prepared for academic evaluation with report-ready documentation, viva preparation, and release packaging.</p>
           </CardContent>
         </Card>
       </section>

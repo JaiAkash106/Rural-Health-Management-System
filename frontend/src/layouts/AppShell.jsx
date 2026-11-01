@@ -3,7 +3,6 @@ import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Outlet } from "react-router-dom";
 import { PostLoginIntro } from "../components/intro/PostLoginIntro";
-import { DemoModeBanner } from "../components/nav/DemoModeBanner";
 import { Header } from "../components/nav/Header";
 import { Sidebar } from "../components/nav/Sidebar";
 import { useAuth } from "../context/AuthContext";
@@ -110,7 +109,6 @@ export function AppShell() {
         />
 
         <div className="glass-panel overflow-hidden rounded-[2rem] border border-[var(--color-border)] shadow-[var(--shadow-soft)]">
-          <DemoModeBanner />
           <Header onOpenMobileNav={() => setIsMobileOpen(true)} onToggleSidebar={() => setIsCompact((current) => !current)} />
           <main aria-hidden={showWelcome} className={`${showWelcome ? "invisible opacity-0" : "visible opacity-100"} p-3 transition-opacity duration-300 md:p-5 lg:p-6`}>
             <AnimatePresence mode="wait">

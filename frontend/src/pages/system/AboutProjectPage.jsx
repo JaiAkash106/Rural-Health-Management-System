@@ -31,7 +31,7 @@ const sections = [
   {
     title: "Limitations and Future Scope",
     content:
-      "This project is an academic and demonstration system. Real-world deployment would require clinical validation, legal review, production monitoring maturity, and approved external health-system integrations.",
+      "Real-world deployment would require clinical validation, legal review, production monitoring maturity, and approved external health-system integrations.",
   },
 ];
 

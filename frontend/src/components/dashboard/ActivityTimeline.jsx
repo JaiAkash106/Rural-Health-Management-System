@@ -1,7 +1,7 @@
-import { activities as fallbackActivities } from "../../data/mockDashboard";
 import { Card, CardContent, CardHeader } from "../ui/Card";
+import { Skeleton } from "../ui/Skeleton";
 
-export function ActivityTimeline({ activities = fallbackActivities }) {
+export function ActivityTimeline({ activities = [], isLoading = false, error = "" }) {
   return (
     <Card>
       <CardHeader
@@ -11,7 +11,10 @@ export function ActivityTimeline({ activities = fallbackActivities }) {
       />
 
       <CardContent className="space-y-5">
-        {activities.map((activity) => (
+        {isLoading ? <Skeleton className="h-44" /> : null}
+        {!isLoading && error ? <p className="text-sm text-[var(--color-danger)]">{error}</p> : null}
+        {!isLoading && !error && !activities.length ? <p className="text-sm text-[var(--color-foreground-muted)]">No recorded activity is available for your account.</p> : null}
+        {!isLoading && !error && activities.map((activity) => (
           <div key={`${activity.time}-${activity.title}`} className="flex gap-4">
             <div className="flex flex-col items-center">
               <div className="h-3 w-3 rounded-full bg-[var(--color-brand)]" />
