@@ -4,6 +4,8 @@ import { useTranslation } from "react-i18next";
 import { NavLink, useLocation } from "react-router-dom";
 import { FiChevronDown, FiChevronLeft, FiChevronRight, FiHome, FiSearch } from "react-icons/fi";
 import { appNavigation } from "../../config/navigation";
+import { filterNavigationForRole } from "../../config/navigation";
+import { useAuth } from "../../context/AuthContext";
 import { Input } from "../ui/Input";
 
 function routeMatches(target, pathname) {
@@ -20,13 +22,14 @@ function groupMatches(group, pathname) {
 export function Sidebar({ isCompact, isMobileOpen, onCloseMobile, onToggleCompact }) {
   const location = useLocation();
   const { t, i18n } = useTranslation();
+  const { user } = useAuth();
   const [query, setQuery] = useState("");
   const [openGroup, setOpenGroup] = useState("navigation.patientCare");
   const expandedWidth = i18n.language === "ta" ? 316 : 292;
 
   const routes = useMemo(
-    () => [{ labelKey: "navigation.dashboard", to: "/" }, ...appNavigation.flatMap((group) => group.children || [])],
-    [],
+    () => [{ labelKey: "navigation.dashboard", to: "/" }, ...filterNavigationForRole(appNavigation, user?.role).flatMap((group) => group.children || [])],
+    [user?.role],
   );
 
   const activeRouteKey = useMemo(() => {
@@ -35,19 +38,19 @@ export function Sidebar({ isCompact, isMobileOpen, onCloseMobile, onToggleCompac
   }, [location.pathname, routes]);
 
   useEffect(() => {
-    const activeGroup = appNavigation.find((item) => item.children && groupMatches(item, location.pathname));
+    const activeGroup = filterNavigationForRole(appNavigation, user?.role).find((item) => item.children && groupMatches(item, location.pathname));
     if (activeGroup) {
       setOpenGroup(activeGroup.labelKey);
     }
-  }, [location.pathname]);
+  }, [location.pathname, user?.role]);
 
   const filteredNavigation = useMemo(() => {
     if (!query.trim()) {
-      return appNavigation;
+      return filterNavigationForRole(appNavigation, user?.role);
     }
 
     const lowered = query.toLowerCase();
-    return appNavigation
+    return filterNavigationForRole(appNavigation, user?.role)
       .map((item) => {
         const translatedGroup = t(item.labelKey).toLowerCase();
         const children = item.children.filter((child) => t(child.labelKey).toLowerCase().includes(lowered));
@@ -57,7 +60,7 @@ export function Sidebar({ isCompact, isMobileOpen, onCloseMobile, onToggleCompac
         return null;
       })
       .filter(Boolean);
-  }, [query, t]);
+  }, [query, t, user?.role]);
 
   return (
     <aside

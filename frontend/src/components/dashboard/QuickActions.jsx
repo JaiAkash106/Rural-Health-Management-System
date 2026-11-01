@@ -1,11 +1,14 @@
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { quickActionLinks } from "../../config/navigation";
+import { canAccess } from "../../config/access";
+import { useAuth } from "../../context/AuthContext";
 import { Button } from "../ui/Button";
 import { Card, CardContent, CardHeader } from "../ui/Card";
 
 export function QuickActions() {
   const { t } = useTranslation();
+  const { user } = useAuth();
 
   return (
     <Card className="overflow-hidden section-hero text-white">
@@ -16,7 +19,7 @@ export function QuickActions() {
       />
 
       <CardContent className="grid gap-3 sm:grid-cols-2">
-        {quickActionLinks.map((action) => {
+        {quickActionLinks.filter((action) => canAccess(action.allowedRoles, user?.role)).map((action) => {
           const Icon = action.icon;
 
           return (

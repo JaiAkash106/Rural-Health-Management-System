@@ -10,8 +10,8 @@ import { flattenNavigation } from "../../config/navigation";
 export function CommandPalette({ open, onClose }) {
   const [query, setQuery] = useState("");
   const [remoteResults, setRemoteResults] = useState([]);
-  const commands = useMemo(() => flattenNavigation(), []);
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, user } = useAuth();
+  const commands = useMemo(() => flattenNavigation(undefined, user?.role), [user?.role]);
   const { t } = useTranslation();
 
   const filteredCommands = useMemo(
