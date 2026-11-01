@@ -10,6 +10,8 @@ import { PageHeader } from "../../components/ui/PageHeader";
 import { Tabs } from "../../components/ui/Tabs";
 import { getBreadcrumbs } from "../../utils/breadcrumbs";
 
+const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5000/api/v1";
+
 function toQueryString(params) {
   const search = new URLSearchParams();
   Object.entries(params).forEach(([key, value]) => {
@@ -24,7 +26,7 @@ function toQueryString(params) {
 
 async function downloadExport(params) {
   const query = toQueryString(params);
-  const response = await fetch(`http://localhost:5000/api/v1/reports/export?${query}`, {
+  const response = await fetch(`${API_BASE_URL}/reports/export?${query}`, {
     headers: {
       Authorization: `Bearer ${window.localStorage.getItem("rhms-access-token")}`,
     },
